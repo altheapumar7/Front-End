@@ -1,26 +1,49 @@
 import React, { useState } from 'react';
 import { GraduationCap, Mail, Lock, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import axios from 'axios'; 
 
 export default function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email && password) onLogin();
+    setError(''); 
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/login', {
+        email: email,
+        password: password
+      });
+
+      if (response.data.token) {
+        localStorage.setItem('auth_token', response.data.token);
+        onLogin();
+      }
+    } catch (err) {
+      setError('Invalid email or password. Please try again.');
+      console.error(err);
+    }
   };
 
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6 relative overflow-hidden">
+      
+      {/* Background Glow Effect */}
       <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-600 rounded-full blur-[120px] opacity-20"></div>
+      
       <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-10 rounded-3xl shadow-2xl w-full max-w-md relative z-10">
         <div className="flex flex-col items-center mb-10">
           <div className="bg-blue-600 p-4 rounded-2xl shadow-lg mb-4">
             <GraduationCap size={40} className="text-white" />
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tighter uppercase">EDUMANAGER</h1>
+          <h1 className="text-3xl font-black text-white tracking-tighter uppercase">ACAD PORTAL</h1>
           <p className="text-slate-400 font-medium text-sm mt-1">Academic Management System</p>
         </div>
+
+        {error && <p className="text-red-400 text-xs font-bold text-center mb-4 uppercase tracking-wider">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
@@ -31,6 +54,7 @@ export default function LoginPage({ onLogin }) {
                 type="email" required
                 className="w-full bg-slate-800/50 border border-slate-700 text-white pl-12 pr-4 py-3.5 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                 placeholder="admin@edumanager.com"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -43,15 +67,28 @@ export default function LoginPage({ onLogin }) {
                 type="password" required
                 className="w-full bg-slate-800/50 border border-slate-700 text-white pl-12 pr-4 py-3.5 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                 placeholder="••••••••"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
+          
           <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center gap-2 group mt-4">
-            Sign In to Dashboard
+            Log In
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </form>
+
+        {/* Register Link Section */}
+        <div className="mt-8 text-center border-t border-white/10 pt-6">
+          <p className="text-slate-400 text-sm font-medium">
+            Don't Have Account? 
+            <Link to="/register" className="text-blue-400 hover:text-blue-300 font-bold ml-2 transition-colors">
+              Click Here
+            </Link>
+          </p>
+        </div>
+
       </div>
     </div>
   );

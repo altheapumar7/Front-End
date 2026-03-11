@@ -3,7 +3,7 @@ import {
   LayoutDashboard, GraduationCap, BookOpen, Search, 
   Clock, Layers, Info, CheckCircle2, LogOut,
   Sun, MessageCircle, Send, X,
-  Users, ClipboardList, BarChart3, Settings // Gidugang nga Icons
+  Users, ClipboardList, BarChart3, Settings 
 } from 'lucide-react';
 
 import StatCard from '../components/dashboard/StatCard';
@@ -51,7 +51,7 @@ export default function DashboardPage({ onLogout }) {
           <div className="bg-blue-600 p-2 rounded-lg text-white">
             <GraduationCap size={24} />
           </div>
-          <h1 className="text-xl font-black tracking-tighter uppercase">EDUMANAGER</h1>
+          <h1 className="text-xl font-black tracking-tighter uppercase">ACAD PORTAL</h1>
         </div>
         
         {/* Updated Navigation Items */}
